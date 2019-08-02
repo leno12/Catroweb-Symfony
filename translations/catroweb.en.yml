@@ -139,7 +139,8 @@ remixGraph:
   programNotAvailable: 'Not available'
   programUnknownUser: 'Unknown User'
 
-
+stealProgram:
+  stealButton: 'Steal This Program'
 noReply:
   This is an automated message - Please do not reply directly to this email.
 

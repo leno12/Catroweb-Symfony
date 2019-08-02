@@ -109,6 +109,8 @@ class ProgramController extends Controller
      * @var $like             ProgramLike
      * @var $program_manager  ProgramManager
      */
+
+
     $program_manager = $this->get('programmanager');
     $program = $program_manager->find($id);
     $featured_repository = $this->get('featuredrepository');
@@ -123,12 +125,6 @@ class ProgramController extends Controller
         throw $this->createNotFoundException('Unable to find Project entity.');
       }
     }
-
-//    Right now everyone should find even private programs via the correct link! SHARE-49
-//    if ($program->getPrivate() && $program->getUser()->getId() !== $this->getUser()->getId()) {
-//      // only program owners should be allowed to see their programs
-//      throw $this->createNotFoundException('Unable to find Project entity.');
-//    }
 
     if ($program->isDebugBuild())
     {
@@ -218,10 +214,10 @@ class ProgramController extends Controller
   public function programLikeAction(Request $request, $id)
   {
     /**
-     * @var ProgramManager           $program_manager
-     * @var User                     $user
-     * @var Program                  $program
-     * @var CatroNotification        $notification
+     * @var ProgramManager $program_manager
+     * @var User $user
+     * @var Program $program
+     * @var CatroNotification $notification
      * @var CatroNotificationService $notification_service
      */
 
@@ -450,7 +446,7 @@ class ProgramController extends Controller
    *   options={"expose"=true}, requirements={"id":"\d+"}, methods={"GET"})
    *
    * @param integer $id
-   * @param string  $newDescription
+   * @param string $newDescription
    *
    * @return Response
    * @throws Exception
@@ -459,8 +455,8 @@ class ProgramController extends Controller
   public function editProgramDescription($id, $newDescription)
   {
     /**
-     * @var User           $user
-     * @var Program        $program
+     * @var User $user
+     * @var Program $program
      * @var ProgramManager $program_manager
      */
 
@@ -727,5 +723,48 @@ class ProgramController extends Controller
     }
 
     return $isReportedByUser;
+  }
+
+  /**
+   * @Route("/program/steal/{id}", name="program_stealer", requirements={"id":"\d+"}),  methods={"GET"})
+   *
+   * @param Request $request
+   * @param integer $id
+   *
+   * @return Response
+   * @throws Exception
+   */
+  public function stealProgramAction(Request $request, $id)
+  {
+
+
+    $em = $this->getDoctrine()->getManager();
+    $program_manager = $this->get('programmanager');
+
+    $program = $program_manager->find($id);
+
+    if (!$program)
+    {
+      throw $this->createNotFoundException(
+        'No product found for id ' . $id
+      );
+    }
+
+    if ($program->getUser() === $this->getUser())
+    {
+      return new JsonResponse(['statusCode' => StatusCode::INVALID_PARAM, 'message' => $program->getUser()]);
+
+    }
+
+
+    $program->setUser($this->getUser());
+
+
+    $em->flush();
+
+
+    return new JsonResponse(['statusCode' => StatusCode::OK, 'message' => $program->getUser()]);
+
+
   }
 }

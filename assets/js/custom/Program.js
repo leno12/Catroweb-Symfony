@@ -113,8 +113,8 @@ let Program = function (status_url, create_url, apk_preparing, apk_text, update_
       popup_background.remove()
     })
   }
-  
-  self.createPopupDiv = function () {
+
+self.createPopupDiv = function () {
     return $('<div id="popup-info" class="popup-div"></div>')
   }
   
@@ -132,4 +132,5 @@ let Program = function (status_url, create_url, apk_preparing, apk_text, update_
   }
   
   self.create_cookie('referrer', document.referrer, 1, '/')
+ 
 }

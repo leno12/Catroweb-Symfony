@@ -36,7 +36,7 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
   //
   self.init = function() {
     restoreParamsWithSessionStorage()
-    $.get(self.url, {limit: self.initial_download_limit, offset: self.number_of_loaded_projects}, function (data) {
+    $.get(self.url, {limit: self.initial_download_limit, offset: self.number_of_loaded_projects}, function(data) {
       if (data.CatrobatProjects === undefined || data.CatrobatProjects.length === 0)
       {
         $(self.container).hide()
@@ -58,7 +58,7 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
     }
     
     restoreParamsWithSessionStorage()
-    $.get(self.url, {program_id: self.recommended_by_project_id,}, function (data) {
+    $.get(self.url, {program_id: self.recommended_by_project_id,}, function(data) {
       if (data.CatrobatProjects === undefined || data.CatrobatProjects.length === 0)
       {
         $(self.container).hide()
@@ -80,7 +80,7 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
       limit  : self.initial_download_limit,
       offset : self.number_of_loaded_projects,
       user_id: user_id
-    }, function (data) {
+    }, function(data) {
       if (data.CatrobatProjects === undefined || data.CatrobatProjects.length === 0)
       {
         $(self.container).hide()
@@ -89,7 +89,8 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
       self.total_number_of_found_projects = parseInt(data.CatrobatInformation.TotalProjects)
       self.project_id = project_id
       setup(data)
-      if (self.total_number_of_found_projects <= 1) {
+      if (self.total_number_of_found_projects <= 1)
+      {
         $(self.container).hide()
       }
     })
@@ -104,14 +105,14 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
       limit  : self.initial_download_limit,
       offset : self.number_of_loaded_projects,
       user_id: user_id
-    }, function (data) {
+    }, function(data) {
       if (data.CatrobatProjects === undefined || data.CatrobatProjects.length === 0)
       {
         let url = Routing.generate('translate_word', {
           'word'  : 'programs.noPrograms',
           'domain': 'catroweb'
         })
-        $.get(url, function (data) {
+        $.get(url, function(data) {
           $(self.container).find('.programs').append('<div class="no-programs">' + data + '</div>')
         })
         return
@@ -136,7 +137,7 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
     self.query = query
     
     $.get(self.url, {q: query, limit: self.initial_download_limit, offset: self.number_of_loaded_projects},
-      function (data) {
+      function(data) {
         let search_results_text = $('#search-results-text')
         
         if (data.CatrobatProjects === undefined || data.CatrobatProjects.length === 0)
@@ -153,7 +154,8 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
   
   //--------------------------------------------------------------------------------------------------------------------
   //
-  async function setup(data) {
+  async function setup(data)
+  {
     
     if (!self.show_all_projects)
     {
@@ -168,11 +170,12 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
     await initParameters()
     await initNumberOfVisibleProjects()
     await keepRowsFull()
-
+    
     await updateUIVisibility()
   }
   
-  async function loadProjectsIntoContainer(data) {
+  async function loadProjectsIntoContainer(data)
+  {
     let projects = data.CatrobatProjects
     for (let i = 0; i < projects.length; i++)
     {
@@ -195,9 +198,10 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
     self.number_of_loaded_projects += projects.length
   }
   
-  async function setNumberOfColumns() {
+  async function setNumberOfColumns()
+  {
     
-    let programs_container_width =$(self.container).find('.programs').width()
+    let programs_container_width = $(self.container).find('.programs').width()
     let program_outer_width = $(self.container).find('.program').outerWidth(true)
     
     let columns = Math.floor(programs_container_width / program_outer_width)
@@ -213,8 +217,10 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
     self.columns = columns
   }
   
-  async function updateInitialDownloadLimit() {
-    if (self.restored_number_of_visible_projects === self.total_number_of_found_projects) {
+  async function updateInitialDownloadLimit()
+  {
+    if (self.restored_number_of_visible_projects === self.total_number_of_found_projects)
+    {
       self.initial_download_limit = self.total_number_of_found_projects
     }
     else if (self.initial_download_limit > self.download_limit)
@@ -227,23 +233,28 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
     }
   }
   
-  async function initNumberOfVisibleProjects() {
-    if (self.restored_number_of_visible_projects > 0) {
+  async function initNumberOfVisibleProjects()
+  {
+    if (self.restored_number_of_visible_projects > 0)
+    {
       await updateNumberOfVisiblePrograms(self.restored_number_of_visible_projects)
     }
-    else {
+    else
+    {
       await updateNumberOfVisiblePrograms(self.default_number_of_visible_projects)
     }
   }
   
-  async function initParameters() {
+  async function initParameters()
+  {
     await setNumberOfColumns()
     self.download_limit = self.default_rows * self.columns
     await updateInitialDownloadLimit()
     self.default_number_of_visible_projects = self.download_limit
   }
   
-  async function keepRowsFull() {
+  async function keepRowsFull()
+  {
     
     if (self.number_of_visible_projects < self.default_number_of_visible_projects &&
       self.number_of_visible_projects < self.total_number_of_found_projects)
@@ -258,12 +269,14 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
     }
   }
   
-  async function updateNumberOfVisiblePrograms(number) {
+  async function updateNumberOfVisiblePrograms(number)
+  {
     self.number_of_visible_projects = number
     setSessionStorage(self.number_of_visible_projects)
   }
   
-  async function showMoreProjects() {
+  async function showMoreProjects()
+  {
     
     if (self.number_of_visible_projects >= self.total_number_of_found_projects)
     {
@@ -289,7 +302,8 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
     }
   }
   
-  async function loadMoreProjects() {
+  async function loadMoreProjects()
+  {
     await hide(show_more_button)
     await hide(show_less_button)
     await show(ajax_animation)
@@ -299,7 +313,7 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
         q     : self.query,
         limit : self.download_limit,
         offset: self.number_of_loaded_projects
-      }, async function (data) {
+      }, async function(data) {
         if ((data.CatrobatProjects === undefined || data.CatrobatProjects.length === 0))
         {
           await hide(ajax_animation)
@@ -313,7 +327,7 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
     }
     else
     {
-      $.get(self.url, {limit: self.download_limit, offset: self.number_of_loaded_projects}, async function (data) {
+      $.get(self.url, {limit: self.download_limit, offset: self.number_of_loaded_projects}, async function(data) {
         if (data.CatrobatProjects === undefined || data.CatrobatProjects.length === 0)
         {
           await hide(ajax_animation)
@@ -326,7 +340,8 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
     }
   }
   
-  async function showLessProjects() {
+  async function showLessProjects()
+  {
     
     if (self.default_number_of_visible_projects > self.number_of_visible_projects)
     {
@@ -347,6 +362,7 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
     }
     await updateUIVisibility();
   }
+  
   // -------------------------------------------------------------------------------------------------------------------
   // UI elements and helper functions to control the UI
   //
@@ -354,15 +370,18 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
   const show_less_button = 'button-show-less';
   const ajax_animation = 'button-show-ajax';
   
-  async function hide(button_name) {
+  async function hide(button_name)
+  {
     $(self.container).find('.' + button_name).hide()
   }
   
-  async function show(button_name) {
+  async function show(button_name)
+  {
     $(self.container).find('.' + button_name).show()
   }
   
-  async function initLoaderUI() {
+  async function initLoaderUI()
+  {
     $(self.container).append('' +
       '<div class="button-show-placeholder">' +
       '<div class=' + show_more_button + '>' +
@@ -376,7 +395,8 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
       '</div>')
   }
   
-  async function showVisibleButtons() {
+  async function showVisibleButtons()
+  {
     
     // As long as not all projects are visible -> show the "show more button"
     if (self.number_of_visible_projects < self.total_number_of_found_projects)
@@ -400,7 +420,8 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
     }
   }
   
-  async function showVisibleProjects() {
+  async function showVisibleProjects()
+  {
     let projects = $(self.container).find('.program')
     $(projects).hide()
     for (let i = 0; i < self.number_of_visible_projects && i < self.number_of_loaded_projects; i++)
@@ -409,7 +430,8 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
     }
   }
   
-  async function updateUIVisibility() {
+  async function updateUIVisibility()
+  {
     if (self.show_all_projects)
     {
       return
@@ -420,7 +442,8 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
     await showVisibleButtons()
   }
   
-  async function buildProjectInHtml(project, data) {
+  async function buildProjectInHtml(project, data)
+  {
     
     let div = await initDivWithCorrectContainerIcon(project)
     let link_css_classes = await getLinkCssClasses()
@@ -444,7 +467,8 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
     )
   }
   
-  async function initDivWithCorrectContainerIcon(project) {
+  async function initDivWithCorrectContainerIcon(project)
+  {
     // Extend this for new containers...
     switch (self.container)
     {
@@ -458,14 +482,14 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
         return '<div><i class="fas fa-clock program-small-icon"></i>' + project.UploadedString + '</div>'
       
       case '#mostDownloaded':
-        return  '<div><i class="fas fa-download program-small-icon"></i>' + project.Downloads + '</div>'
+        return '<div><i class="fas fa-download program-small-icon"></i>' + project.Downloads + '</div>'
       
       case '#mostViewed':
-        return  '<div><i class="fas fa-eye program-small-icon"></i>' + project.Views + '</div>'
+        return '<div><i class="fas fa-eye program-small-icon"></i>' + project.Views + '</div>'
       
       case '#recommendations':
       case '#more-from-this-user-recommendations':
-        return  '<div><i class="fas fa-eye program-small-icon"></i>' + project.Views + '</div>'
+        return '<div><i class="fas fa-eye program-small-icon"></i>' + project.Views + '</div>'
       
       case '#recommended':
         return '<div><i class="fas fa-eye program-small-icon"></i>' + project.Views + '</div>'
@@ -485,7 +509,8 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
     }
   }
   
-  async function getLinkCssClasses() {
+  async function getLinkCssClasses()
+  {
     let additional_link_css_class = '';
     if (self.container === '#recommended')
     {
@@ -494,7 +519,8 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
     return 'rec-programs' + ' ' + additional_link_css_class + ' '
   }
   
-  async function getProjectLink(project, data) {
+  async function getProjectLink(project, data)
+  {
     switch (self.container)
     {
       case '#recommendations':
@@ -512,11 +538,13 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
     return data.CatrobatInformation.BaseUrl + project.ProjectUrl
   }
   
-  function isMyProject() {
+  function isMyProject()
+  {
     return self.container === '#myprofile-programs'
   }
   
-  async function addMyProfileProgramButtons(html_project, project) {
+  async function addMyProfileProgramButtons(html_project, project)
+  {
     $(html_project).prepend('<div id="delete-' + project.ProjectId + '" class="img-delete" ' +
       'onclick="profile.deleteProgram(' + project.ProjectId + ')">' +
       '<i class="fas fa-times-circle catro-icon-button"></i></div>')
@@ -526,7 +554,7 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
       ' onclick="profile.toggleVisibility(' + project.ProjectId + ')">' +
       '<i class="fas fa-lock-open catro-icon-button"></i></div>')
     
-    $(html_project).prepend('<div id="visibility-lock-' + project.ProjectId + '" class="img-lock" ' +
+    $(html_project).prepend('<div id="visibility-lock-' + project.ProjectId + '"  class="img-lock"' +
       (project.Private ? '' : 'style="display: none;"') +
       ' onclick="profile.toggleVisibility(' + project.ProjectId + ')">' +
       '<i class="fas fa-lock catro-icon-button"></i></div>')
@@ -535,19 +563,21 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
   // -------------------------------------------------------------------------------------------------------------------
   // Listeners
   //
-  function showMoreListener() {
-    $(self.container + ' .' + show_more_button).click(async function () {
+  function showMoreListener()
+  {
+    $(self.container + ' .' + show_more_button).click(async function() {
       await showMoreProjects()
     })
   }
   
-  async function showLessListener() {
-    $(self.container + ' .' + show_less_button).click(async function () {
+  async function showLessListener()
+  {
+    $(self.container + ' .' + show_less_button).click(async function() {
       await showLessProjects()
     })
   }
   
-  $(window).resize(async function () {
+  $(window).resize(async function() {
     if (self.windowWidth === $(window).width())
     {
       return
@@ -564,14 +594,17 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
   //
   self.restored_number_of_visible_projects = 0;
   
-  function restoreParamsWithSessionStorage() {
+  function restoreParamsWithSessionStorage()
+  {
     self.restored_number_of_visible_projects = parseInt(sessionStorage.getItem(self.container))
-    if (self.restored_number_of_visible_projects > self.initial_download_limit) {
+    if (self.restored_number_of_visible_projects > self.initial_download_limit)
+    {
       self.initial_download_limit = self.restored_number_of_visible_projects;
     }
   }
   
-  function setSessionStorage(value) {
+  function setSessionStorage(value)
+  {
     sessionStorage.setItem(self.container, value)
   }
   
