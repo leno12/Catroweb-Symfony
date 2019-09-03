@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\GameJamRepository;
 use Liip\ThemeBundle\ActiveTheme;
 use Symfony\Component\Intl\Intl;
+use Symfony\Component\Intl\Locales;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -120,7 +121,7 @@ class AppExtension extends AbstractExtension
       new TwigFunction('getThemeDisplayName', [$this, 'getThemeDisplayName']),
       new TwigFunction('getCurrentGameJam', [$this, 'getCurrentGameJam']),
       new TwigFunction('getJavascriptPath', [$this, 'getJavascriptPath']),
-      new TwigFunction('getCommunityStats', [$this, 'getCommunityStats'])
+      new TwigFunction('getCommunityStats', [$this, 'getCommunityStats']),
     ];
   }
 
@@ -173,7 +174,10 @@ class AppExtension extends AbstractExtension
         $isSelectedLangugage = true;
       }
 
-      $locale = Intl::getLocaleBundle()->getLocaleName($shortName, $shortName);
+
+      $locale = Locales::getName($shortName, $shortName);
+
+
       if ($locale != null)
       {
         $list[] = [
@@ -309,7 +313,8 @@ class AppExtension extends AbstractExtension
    */
   public function getThemeDisplayName()
   {
-    switch ($this->getTheme()) {
+    switch ($this->getTheme())
+    {
       case 'luna':
         return "Luna & Cat";
 
