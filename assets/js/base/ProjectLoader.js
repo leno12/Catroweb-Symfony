@@ -585,4 +585,28 @@ let ProjectLoader = function(container, url, recommended_by_project_id, recommen
   self.escapeJavaScript = function(html) {
     return html.replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
+  
+  self.manageProgramVisits = function()
+  {
+    $(document).on('click', '.program', function () {
+      let clicked_program_id = this.id.replace('program-', '')
+      this.className += ' visited-program'
+      let stored_visits = sessionStorage.getItem('visits')
+    
+      if (!stored_visits)
+      {
+        let new_visits = [clicked_program_id]
+        sessionStorage.setItem('visits', JSON.stringify(new_visits))
+      }
+      else
+      {
+        let parsed_visits = JSON.parse(stored_visits)
+        if (!($.inArray(clicked_program_id, parsed_visits) >= 0))
+        {
+          parsed_visits.push(clicked_program_id)
+          sessionStorage.setItem('visits', JSON.stringify(parsed_visits))
+        }
+      }
+    })
+  }
 }
