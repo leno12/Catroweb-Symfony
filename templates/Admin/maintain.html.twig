@@ -218,35 +218,12 @@
   {{ parent() }}
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
   <script type="text/javascript">
-    backup_create_link = "{{ backupCommand.command_link }}"
-
-    function initBackupProgress ()
-    {
-      $('#backup-modal').modal('show')
-    }
-
-    $(function () {
-      $('#btnCreateBackup').click(function () {
-        $('#btnCreateBackup').prop('disabled', true)
-        $('#btnCreateBackup').text('Backup started...')
-        $.ajax
-        ({
-          type: 'GET',
-          url : backup_create_link,
-
-          success: function (data) {
-            window.location.reload()
-          },
-          error  : function (jqXHR, error) {
-            window.location.reload()
-          }
-        })
-        initBackupProgress()
-      })
-    })
   </script>
+  <script src="{{ asset('compiled/js/Admin.js') }}"></script>
 
   <script>
+    manageBackupProgress("{{ backupCommand.command_link }}",{{ RemovableObjects|json_encode|raw }})
+
     google.load('visualization', '1', {packages: ['corechart']})
     google.setOnLoadCallback(drawDiskChart)
     google.setOnLoadCallback(drawRamChart)
