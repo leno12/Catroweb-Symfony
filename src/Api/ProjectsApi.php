@@ -4,12 +4,52 @@ namespace App\Api;
 
 use OpenAPI\Server\Api\ProjectsApiInterface;
 use OpenAPI\Server\Model\Flavor;
+use OpenAPI\Server\Model\Project;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 
+use App\Catrobat\Responses\ApiResponse;
+use App\Catrobat\Services\Formatter\ElapsedTimeStringFormatter;
+use App\Entity\Program;
+use App\Entity\ProgramManager;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-class ProjectsApi implements ProjectsApiInterface
+
+class ProjectsApi extends AbstractController implements ProjectsApiInterface
 {
+  /**
+   * @var ProgramManager
+   */
+  private $program_manager;
+
+  /**
+   * @var SessionInterface
+   */
+  private $session;
+
+  /**
+   * @var ElapsedTimeStringFormatter
+   */
+  private $time_formatter;
+
+
+  /**
+   * ProjectsApi constructor.
+   *
+   * @param ProgramManager             $program_manager
+   *
+   * @param SessionInterface           $session
+   *
+   * @param ElapsedTimeStringFormatter $time_formatter
+   */
+  public function __construct(ProgramManager $program_manager, SessionInterface $session,
+                              ElapsedTimeStringFormatter $time_formatter)
+  {
+    $this->program_manager = $program_manager;
+    $this->session = $session;
+    $this->time_formatter = $time_formatter;
+  }
 
   /**
    * @inheritDoc
@@ -61,7 +101,42 @@ class ProjectsApi implements ProjectsApiInterface
    */
   public function projectsRandomProgramsGet($maxVersion = null, $limit = 20, $offset = 0, Flavor $flavor = null, &$responseCode, array &$responseHeaders)
   {
-    $responseCode = Response::HTTP_NOT_IMPLEMENTED;
+    $programs = $this->program_manager->getRandomPrograms($flavor, $limit, $offset, $maxVersion);
+    $responseCode = Response::HTTP_OK;
+    $projects = [];
+    foreach ($programs as &$program)
+    {
+      $new_project = [
+        'id'              => $program->getId(),
+        'name'            => $program->getName(),
+        'author'          => $program->getUser()->getUserName(),
+        'description'     => $program->getDescription(),
+        'version'         => $program->getCatrobatVersionName(),
+        'views'           => $program->getViews(),
+        'download'        => $program->getDownloads(),
+        'private'         => $program->getPrivate(),
+        'flavor'          => $program->getFlavor(),
+        'uploaded'        => $program->getUploadedAt()->getTimestamp(),
+        'uploadedString'  => $this->time_formatter->getElapsedTime($program->getUploadedAt()
+          ->getTimestamp()),
+        'screenshotLarge' => $this->program_manager->getScreenshotLarge($program->getId()),
+        'screenshotSmall' => $this->program_manager->getScreenshotSmall($program->getId()),
+        'projectUrl'      => ltrim($this->generateUrl('program', [
+          'flavor' => $this->session->get('flavor_context'),
+          'id'     => $program->getId(),
+        ]), '/'),
+        'downloadUrl'     => ltrim($this->generateUrl('download', [
+          'id' => $program->getId(),
+        ]), '/'),
+        'filesize'        => $program->getFilesize() / 1048576,
+      ];
+      $project = new Project($new_project);
+      array_push($projects, $project);
+    }
+
+
+    return $projects;
+
     // TODO: Implement projectsRandomProgramsGet() method.
   }
 

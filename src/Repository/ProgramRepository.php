@@ -412,11 +412,11 @@ class ProgramRepository extends ServiceEntityRepository
    * @param string|null $flavor
    * @param int|null    $limit
    * @param int         $offset
-   * @param string      $max_version
+   * @param string|null $max_version
    *
    * @return array
    */
-  public function getRandomPrograms(bool $debug_build, $flavor = null, $limit = 20, $offset = 0, string $max_version = "0")
+  public function getRandomPrograms(bool $debug_build, $flavor = null, $limit = 20, $offset = 0, $max_version = null)
   {
     // Rand(), newid() and TABLESAMPLE() doesn't exist in the Native Query
     // therefore we have to do a workaround for random results
@@ -447,11 +447,11 @@ class ProgramRepository extends ServiceEntityRepository
   /**
    * @param string|null $flavor
    * @param bool        $debug_build If debug builds should be included
-   * @param string      $max_version
+   * @param string|null $max_version
    *
    * @return mixed
    */
-  public function getVisibleProgramIds($flavor, bool $debug_build, string $max_version = "0")
+  public function getVisibleProgramIds($flavor, bool $debug_build, $max_version = null)
   {
     $query_builder = $this->createQueryBuilder('e');
 
@@ -468,9 +468,9 @@ class ProgramRepository extends ServiceEntityRepository
   }
 
   /**
-   * @param array     $programs
-   * @param bool      $debug_build If debug builds should be included
-   * @param string    $max_version
+   * @param array  $programs
+   * @param bool   $debug_build If debug builds should be included
+   * @param string $max_version
    *
    * @return Program[]|array
    */
@@ -1267,14 +1267,14 @@ class ProgramRepository extends ServiceEntityRepository
 
   /**
    * @param QueryBuilder $query_builder
-   * @param string       $max_version
-   * @param string       $alias The QueryBuilder alias to use
+   * @param string|null  $max_version
+   * @param string|null  $alias The QueryBuilder alias to use
    *
    * @return QueryBuilder
    */
-  private function addMaxVersionCondition(QueryBuilder $query_builder, string $max_version = "0", string $alias = 'e')
+  private function addMaxVersionCondition(QueryBuilder $query_builder, $max_version = null, string $alias = 'e')
   {
-    if ($max_version !== "0")
+    if ($max_version !== null)
     {
       $query_builder
         ->andWhere($query_builder->expr()->lte($alias . '.language_version', ':max_version'))

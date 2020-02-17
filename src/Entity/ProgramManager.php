@@ -699,11 +699,11 @@ class ProgramManager
    * @param string|null $flavor
    * @param int|null    $limit
    * @param int         $offset
-   * @param string      $max_version
+   * @param string|null $max_version
    *
    * @return array
    */
-  public function getRandomPrograms($flavor, $limit = null, $offset = 0, string $max_version = "0")
+  public function getRandomPrograms($flavor, $limit = null, $offset = 0, $max_version = null)
   {
     return $this->program_repository->getRandomPrograms(
       $this->app_request->isDebugBuildRequest(), $flavor, $limit, $offset, $max_version
@@ -977,5 +977,25 @@ class ProgramManager
   public function findOneByRemixMigratedAt($remix_migrated_at)
   {
     return $this->program_repository->findOneBy(['remix_migrated_at' => $remix_migrated_at]);
+  }
+
+  /**
+   * @param $id
+   *
+   * @return string
+   */
+  public function getScreenshotLarge($id)
+  {
+    return $this->screenshot_repository->getScreenshotWebPath($id);
+  }
+
+  /**
+   * @param $id
+   *
+   * @return string
+   */
+  public function getScreenshotSmall($id)
+  {
+    return $this->screenshot_repository->getThumbnailWebPath($id);
   }
 }

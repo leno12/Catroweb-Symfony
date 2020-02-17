@@ -57,11 +57,16 @@ default:
             contexts:
                 - AdminFeatureContext:
                     - "tests/testreports/screens/"
-
         api:
-            paths:    [ "tests/behat/features/api" ]
-            contexts:
+             paths:    [ "tests/behat/features/api" ]
+             contexts:
                 - ApiFeatureContext:
+                    - "tests/testreports/behat/"
+
+        projects-api:
+             paths:    ["tests/behat/features/API/projects"]
+             contexts:
+                - ApiNewFeatureContext:
                     - "tests/testreports/behat/"
 
         ci:
