@@ -2,6 +2,8 @@
 Feature: Get the random programs
 
   Background:
+    Given the server name is "pocketcode.org"
+    And I use a secure connection
     Given there are users:
       | name     | password | token      | id |
       | Catrobat | 12345    | cccccccccc |  1 |

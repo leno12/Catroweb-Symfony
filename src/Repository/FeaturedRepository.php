@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\FeaturedProgram;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\NonUniqueResultException;
 
@@ -28,11 +29,16 @@ class FeaturedRepository extends ServiceEntityRepository
    * @param int  $limit
    * @param int  $offset
    * @param bool $for_ios
+   * @param string      $max_version
    *
    * @return mixed
    */
-  public function getFeaturedPrograms($flavor, $limit = 20, $offset = 0, $for_ios = false)
+  public function getFeaturedPrograms($flavor, $limit = 20, $offset = 0, $for_ios = false, string $max_version)
   {
+    if($max_version == null)
+    {
+      $max_version = "0";
+    }
     $qb = $this->createQueryBuilder('e');
 
     $qb
@@ -47,8 +53,10 @@ class FeaturedRepository extends ServiceEntityRepository
       ->setMaxResults($limit);
 
     $qb->orderBy('e.priority', 'DESC');
+    $query_builder = $this->addMaxVersionCondition($qb, $max_version);
 
-    return $qb->getQuery()->getResult();
+
+    return $query_builder->getQuery()->getResult();
   }
 
   /**
@@ -137,5 +145,23 @@ class FeaturedRepository extends ServiceEntityRepository
     {
       return false;
     }
+  }
+  /**
+   * @param QueryBuilder $query_builder
+   * @param string       $max_version
+   * @param string       $alias The QueryBuilder alias to use
+   *
+   * @return QueryBuilder
+   */
+  private function addMaxVersionCondition(QueryBuilder $query_builder, string $max_version = "0", string $alias = 'e')
+  {
+    if ($max_version !== "0")
+    {
+      $query_builder
+        ->andWhere($query_builder->expr()->lte($alias . '.language_version', ':max_version'))
+        ->setParameter('max_version', $max_version);
+    }
+
+    return $query_builder;
   }
 }
