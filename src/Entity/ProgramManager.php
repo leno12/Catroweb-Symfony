@@ -233,8 +233,6 @@ class ProgramManager
       {
         $this->screenshot_repository->saveProgramAssetsTemp($extracted_file->getScreenshotPath(), $program->getId());
       }
-
-      $this->file_repository->saveProgramTemp($extracted_file, $program->getId());
     }
     catch (Exception $e)
     {
@@ -265,7 +263,6 @@ class ProgramManager
       {
         $this->screenshot_repository->makeTempProgramAssetsPerm($program->getId());
       }
-      $this->file_repository->makeTempProgramPerm($program->getId());
     }
     catch (Exception $e)
     {
@@ -276,7 +273,6 @@ class ProgramManager
       try
       {
         $this->screenshot_repository->deletePermProgramAssets($program_id);
-        $this->file_repository->deleteProgramFile($program_id);
       }
       catch (IOException $error)
       {
@@ -292,6 +288,7 @@ class ProgramManager
     $this->entity_manager->persist($program);
     $this->entity_manager->flush();
     $this->entity_manager->refresh($program);
+    $this->file_repository->saveProgramFile($file, $program->getId());
 
     $this->event_dispatcher->dispatch(new ProgramAfterInsertEvent($extracted_file, $program));
     $this->notifyFollower($program);

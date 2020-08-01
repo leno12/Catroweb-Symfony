@@ -184,11 +184,11 @@ class ProgramManagerTest extends TestCase
         return $project;
       }))
     ;
+    fopen('/tmp/phpUnitTest', 'w');
+    $file = new File('/tmp/phpUnitTest');
+    $this->file_repository->expects($this->atLeastOnce())->method('saveProgramFile')->with($file, 1);
     $this->entity_manager->expects($this->atLeastOnce())->method('flush');
     $this->entity_manager->expects($this->atLeastOnce())->method('refresh')->with($this->isInstanceOf(Program::class));
-
-    $this->file_repository->expects($this->atLeastOnce())->method('saveProgramTemp')->with($this->extracted_file, 1);
-    $this->file_repository->expects($this->atLeastOnce())->method('makeTempProgramPerm')->with(1);
 
     $this->event_dispatcher->expects($this->atLeastOnce())->method('dispatch')->willReturn($this->programBeforeInsertEvent);
 
