@@ -919,6 +919,7 @@ help-cards:
     game_design: Game design
     education: Education platform
     discuss: Discuss
+    wiki: Wiki
   text:
     starters: "Try out and remix with %theme%"
     tutorials: "Effective tricks in %theme%"
@@ -930,6 +931,8 @@ help-cards:
     education: Beginner's course & great resources
     discuss_1: Get in touch with other
     discuss_2: users
+    wiki: For more information and tutorials check out our Catrobat wiki page
+
 
 media-packages:
   title: Media-Packages

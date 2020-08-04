@@ -70,10 +70,6 @@
   box-shadow: inset lighten($primary, 50%) 0 0 0 5px;
   color: $body-color;
   text-shadow: 0 0 75px #FFFFFF;
-
-  img {
-    position: absolute;
-  }
 }
 
 .help-card.green {
@@ -148,15 +144,6 @@
   box-shadow: inset #ea8d5a 0 0 0 5px;
 }
 
-
-.help-card.starter {
-  img {
-    position: absolute;
-    bottom: 24%;
-    right: 0;
-  }
-}
-
 .help-card.tutorial {
   img {
     position: absolute;
@@ -193,7 +180,7 @@
   img {
     position: absolute;
     bottom: 0;
-    right: 7%;
+    right: 3%;
   }
 }
 
@@ -220,8 +207,11 @@
 .help-card.google-play {
   img {
     position: absolute;
-    right: 7%;
+    right: 3%;
     top: 20%;
+    transform: scale(0.8, 0.8);
+    -ms-transform: scale(0.8, 0.8);
+    -webkit-transform: scale(0.8, 0.8);
   }
 
   &:hover {
@@ -233,7 +223,7 @@
 
     &:after {
       transform: translateX(900px) skewX(-15deg) !important;
-      opacity: 1;
+      opacity: 1.0;
       transition: 1.5s;
     }
   }
@@ -317,6 +307,9 @@
 
     .catro-content img {
       transform: scale(1.2);
+    }
+    .catro-content .google-play-img{
+      transform: scale(1.0);
     }
   }
 }
