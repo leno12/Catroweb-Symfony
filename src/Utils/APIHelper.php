@@ -45,4 +45,14 @@ class APIHelper
   {
     return null === $accept_language ? 'en' : $accept_language;
   }
+    public static function checkIfRecommended($type)
+    {
+        switch ($type)
+        {
+            case 'recommended':
+                return true;
+            default:
+                return false;
+        }
+    }
 }

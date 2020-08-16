@@ -916,7 +916,7 @@ class ProgramManager
   }
 
   public function getProjects(string $category, string $max_version = '0',
-                              int $limit = 20, int $offset = 0, string $flavor = null): array
+                              int $limit = 20, int $offset = 0, string $flavor = null, string $program_id): array
   {
     switch ($category){
       case 'recent':
@@ -931,6 +931,8 @@ class ProgramManager
         return $this->getExamplePrograms($flavor, $limit, $offset, $max_version);
       case 'scratch':
         return $this->getScratchRemixesPrograms($flavor, $limit, $offset, $max_version);
+      case 'similar':
+        return $this->getRecommendedProgramsById($program_id, $flavor, $limit, $offset);
       default:
         return [];
     }

@@ -132,14 +132,19 @@ class ProjectsApi extends AbstractController implements ProjectsApiInterface
    *
    * @throws Exception
    */
-  public function projectsGet(string $category, ?string $accept_language = null, ?string $max_version = null, ?int $limit = 20, ?int $offset = 0, ?string $flavor = null, &$responseCode, array &$responseHeaders)
+  public function projectsGet(string $category, ?string $accept_language = null, ?string $max_version = null, ?int $limit = 20, ?int $offset = 0, ?string $flavor = null, ?string $program_id, &$responseCode, array &$responseHeaders)
   {
     $max_version = APIHelper::setDefaultMaxVersionOnNull($max_version);
     $limit = APIHelper::setDefaultLimitOnNull($limit);
     $offset = APIHelper::setDefaultOffsetOnNull($offset);
     $accept_language = APIHelper::setDefaultAcceptLanguageOnNull($accept_language);
-
-    $programs = $this->program_manager->getProjects($category, $max_version, $limit, $offset, $flavor);
+      if(APIHelper::checkIfRecommended($category))
+      {
+          /** @var User $user */
+          $user = $this->token_storage->getToken()->getUser();
+          $programs = $this->recommender_manager->getProjects($user,$limit,$offset,$flavor);
+      }
+    $programs = $this->program_manager->getProjects($category, $max_version, $limit, $offset, $flavor, $program_id);
     $responseCode = Response::HTTP_OK;
 
     return $this->getProjectsDataResponse($programs);
