@@ -7,6 +7,7 @@ use Exception;
 use OpenAPI\Server\Api\AuthenticationApiInterface;
 use OpenAPI\Server\Model\JWTResponse;
 use OpenAPI\Server\Model\LoginRequest;
+use OpenAPI\Server\Model\OAuthLoginRequest;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthenticationApi implements AuthenticationApiInterface
@@ -32,6 +33,13 @@ class AuthenticationApi implements AuthenticationApiInterface
     // Successful requests are passed to this method.
     $responseCode = Response::HTTP_OK;
   }
+    /**
+     * {@inheritdoc}
+     */
+    public function authenticationOauthPost(OAuthLoginRequest $o_auth_login_request, &$responseCode, array &$responseHeaders)
+    {
+
+    }
 
   /**
    * {@inheritdoc}

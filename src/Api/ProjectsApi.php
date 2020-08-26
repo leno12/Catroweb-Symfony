@@ -17,6 +17,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use OpenAPI\Server\Api\ProjectsApiInterface;
 use OpenAPI\Server\Model\FeaturedProjectResponse;
+use OpenAPI\Server\Model\OAuthLoginRequest;
+use OpenAPI\Server\Model\ProjectReportRequest;
 use OpenAPI\Server\Model\ProjectResponse;
 use OpenAPI\Server\Model\UploadErrorResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,6 +30,7 @@ use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use function PHPUnit\Framework\throwException;
 
 class ProjectsApi extends AbstractController implements ProjectsApiInterface
 {
@@ -281,7 +284,45 @@ class ProjectsApi extends AbstractController implements ProjectsApiInterface
     return $this->getProjectsDataResponse($programs);
   }
 
-  /**
+    /**
+     * {@inheritdoc}
+     *
+     * @throws Exception
+     */
+    public function projectIdRecommendationsGet(string $id, string $category, ?string $accept_language = null, string $max_version = null, ?int $limit = 20, ?int $offset = 0, string $flavor = null, &$responseCode, array &$responseHeaders)
+    {
+        $max_version = APIHelper::setDefaultMaxVersionOnNull($max_version);
+        $limit = APIHelper::setDefaultLimitOnNull($limit);
+        $offset = APIHelper::setDefaultOffsetOnNull($offset);
+
+        if ('' === $id || ctype_space($id) || null == $this->program_manager->find($id))
+        {
+            $responseCode = Response::HTTP_NOT_FOUND;
+
+            return null;
+        }
+        $responseCode = Response::HTTP_OK;
+        switch ($category)
+        {
+            case 'similar':
+                $programs = $this->program_manager->getRecommendedProgramsById($id, $flavor, $limit, $offset, $max_version);
+                break;
+            default:
+                $programs = [];
+        }
+
+        return $this->getProjectsDataResponse($programs);
+    }
+    /**
+     * {@inheritdoc}
+     *
+     */
+    public function projectsIdReportPost(string $id, ProjectReportRequest $project_report_request, &$responseCode, array &$responseHeaders)
+    {
+
+    }
+
+    /**
    * @param Program|ExampleProgram $program
    *
    * @throws Exception

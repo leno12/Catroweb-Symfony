@@ -808,10 +808,10 @@ class ProgramManager
     );
   }
 
-  public function getRecommendedProgramsById(string $id, string $flavor, ?int $limit, int $offset): array
+  public function getRecommendedProgramsById(string $id, string $flavor = null, int $limit = 20, int $offset = 0, string $max_version = '0'): array
   {
     return $this->program_repository->getRecommendedProgramsById(
-      $id, $this->app_request->isDebugBuildRequest(), $flavor, $limit, $offset
+      $id, $this->app_request->isDebugBuildRequest(), $flavor, $limit, $offset, $max_version
     );
   }
 

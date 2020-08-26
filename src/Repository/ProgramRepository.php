@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use _HumbugBoxadd759dbc574\Nette\Neon\Exception;
 use App\Entity\Program;
 use App\Entity\ProgramDownloads;
 use App\Entity\ProgramLike;
@@ -888,26 +889,32 @@ class ProgramRepository extends ServiceEntityRepository
     return is_countable($db_query->getResult()) ? count($db_query->getResult()) : 0;
   }
 
-  public function getRecommendedProgramsById(string $id, bool $debug_build, string $flavor, ?int $limit, int $offset = 0): array
+  public function getRecommendedProgramsById(string $id, bool $debug_build, string $flavor = null, int $limit = 20, int $offset = 0, string $max_version = '0'): array
   {
     $db_query = $this->createRecommendedProgramQuery($id, $debug_build, $flavor);
 
     $db_query->setFirstResult($offset);
     $db_query->setMaxResults($limit);
 
+
     $id_list = array_map(fn ($value) => $value['id'], $db_query->getResult());
 
     $programs = [];
     foreach ($id_list as $id)
     {
-      $programs[] = $this->find($id);
+       $program = $this->find($id);
+       if($program->getLanguageVersion() <= $max_version || $max_version === '0')
+       {
+           $programs[] = $program;
+       }
     }
 
     return $programs;
   }
 
-  private function createRecommendedProgramQuery(string $id, bool $debug_build, string $flavor): Query
+  private function createRecommendedProgramQuery(string $id, bool $debug_build, string $flavor = null): Query
   {
+
     $qb_tags = $this->createQueryBuilder('e');
 
     $result = $qb_tags
@@ -958,6 +965,8 @@ class ProgramRepository extends ServiceEntityRepository
     $db_query->setParameter('tag_ids', $tag_ids);
     $db_query->setParameter('extension_ids', $extensions_id);
     $db_query->setParameter('flavor', $flavor);
+
+
 
     return $db_query;
   }
