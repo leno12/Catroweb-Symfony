@@ -35,7 +35,7 @@ jobs:
     name: JavaScript [ESLint]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
 
       # Download and set up node (caching is enabled)
       - uses: actions/setup-node@v2.1.1
@@ -72,7 +72,7 @@ jobs:
     name: Sass,CSS [StyleLint]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
 
       # Download and set up node (caching is enabled)
       - uses: actions/setup-node@v2.1.1
@@ -125,7 +125,7 @@ jobs:
     name: PHP Code Style [Php-CS-Fixer]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
 
       # Optional - ensure composer configuration is valid
       - run: composer validate
@@ -162,7 +162,7 @@ jobs:
     name: PHP Static Analysis [Php-Stan]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
 
       # Optional - ensure composer configuration is valid
       - run: composer validate
@@ -199,7 +199,7 @@ jobs:
     name: PHP Static Analysis [Psalm]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
 
       - run: sudo apt-get install php-imagick
 
@@ -239,7 +239,7 @@ jobs:
     name: PHP Static Analysis [PhpCPD]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
       - name: PHP Copy Paste Detector
         uses: StephaneBour/actions-php-cpd@1.1
         with:
@@ -254,7 +254,7 @@ jobs:
     name: PHP Static Analysis [PhpCF]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
 
       # Optional - ensure composer configuration is valid
       - run: composer validate
@@ -290,7 +290,7 @@ jobs:
     name: PHP Info [PhpLoc]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
       - run: wget https://phar.phpunit.de/phploc.phar
       - run: php phploc.phar src tests
 
@@ -303,7 +303,7 @@ jobs:
     name: Twig [Lint]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
 
       # Optional - ensure composer configuration is valid
       - run: composer validate
@@ -339,7 +339,7 @@ jobs:
     name: Yaml [Lint]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
 
       # Optional - ensure composer configuration is valid
       - run: composer validate
@@ -376,7 +376,7 @@ jobs:
     name: Symfony Container [Lint]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
 
       # Optional - ensure composer configuration is valid
       - run: composer validate
